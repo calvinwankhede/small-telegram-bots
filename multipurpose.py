@@ -16,7 +16,7 @@ xkcdexplanation = "Request an XKCD comic first with the /xkcd command"
 def start(bot, update):
     msg = "Hey {username}, I'm {botname}. You can: \n\n"
     msg += "1) Request a random XKCD with /xkcd \n"
-    msg += "2) Access our shared to-do list with /list and add items to it with /add"
+    msg += "2) Access our shared to-do list with /list and add items to it with /add."
     update.message.reply_text(msg.format(username=update.message.from_user.first_name, botname=bot.name), quote=False)
 
 # Start XKCD
@@ -37,22 +37,18 @@ def explanation(bot, update):
 
 # Start list
 def sendlist(bot, update):
+    list()
     if len(msg) == 0:
         update.message.reply_text("Nothing has been added yet. Reply with /help if you don't know what to do.", quote=False)
     else:
         update.message.reply_text(msg, quote=False)
 
-def list(table):
+def list():
     global msg
     msg = ""
     conn = sqlite3.connect('list.db')
     c = conn.cursor()
-    if table == "todo":
-        listitems = c.execute('SELECT item FROM todo')
-    elif table == "movies":
-        listitems = c.execute('SELECT item FROM movies')
-    else:
-        msg = "Sorry, but that list doesn't exist!"
+    listitems = c.execute('SELECT item FROM todo')
     i = 0
     try:
         for item in listitems:
@@ -103,8 +99,6 @@ def removeall(bot, update, args):
     conn.close()
 
 
-
-
 def error(bot, update, error):
     logger.warn('Update "%s" caused error "%s"' % (update, error))
 
@@ -119,7 +113,7 @@ def main():
     dp.add_handler(CommandHandler("xkcd", randomxkcd))
     dp.add_handler(CommandHandler("xkcd_explain", explanation))
     # list
-    dp.add_handler(CommandHandler("list", sendlist, pass_args=True))
+    dp.add_handler(CommandHandler("list", sendlist))
     dp.add_handler(CommandHandler("add", additem, pass_args=True))
     dp.add_handler(CommandHandler("remove", removeitem, pass_args=True))
     dp.add_handler(CommandHandler("removeall", removeall, pass_args=True))
