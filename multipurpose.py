@@ -9,7 +9,7 @@ logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s
 logger = logging.getLogger(__name__)
 
 config = configparser.ConfigParser()
-config.read('config.txt')
+config.read('/etc/config.txt')
 
 xkcdexplanation = "Request an XKCD comic first with the /xkcd command."
 
