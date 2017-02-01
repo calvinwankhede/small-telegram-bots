@@ -11,11 +11,11 @@ logger = logging.getLogger(__name__)
 config = configparser.ConfigParser()
 config.read('config.txt')
 
-xkcdexplanation = "Request an XKCD comic first with the /xkcd command"
+xkcdexplanation = "Request an XKCD comic first with the /xkcd command."
 
 def start(bot, update):
     msg = "Hey {username}, I'm {botname}. You can: \n\n"
-    msg += "1) Request a random XKCD with /xkcd \n"
+    msg += "1) Request a random XKCD with /xkcd. \n"
     msg += "2) Access our shared to-do list with /list and add items to it with /add."
     update.message.reply_text(msg.format(username=update.message.from_user.first_name, botname=bot.name), quote=False)
 
@@ -36,13 +36,6 @@ def explanation(bot, update):
 # End XKCD
 
 # Start list
-def sendlist(bot, update):
-    list()
-    if len(msg) == 0:
-        update.message.reply_text("Nothing has been added yet. Reply with /help if you don't know what to do.", quote=False)
-    else:
-        update.message.reply_text(msg, quote=False)
-
 def list():
     global msg
     msg = ""
@@ -58,6 +51,13 @@ def list():
         return
     conn.commit()
     conn.close()
+
+def sendlist(bot, update):
+    list()
+    if len(msg) == 0:
+        update.message.reply_text("Nothing has been added yet.", quote=False)
+    else:
+        update.message.reply_text(msg, quote=False)
 
 # Start add
 def additem(bot, update, args):
