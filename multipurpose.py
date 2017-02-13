@@ -99,7 +99,7 @@ def removeall(bot, update, args):
 
 def new(bot, update):
     file = open("log.txt", "w")
-    print update.message
+    print(update.message)
     income_message = update.message.text
     file.write(income_message)
 
