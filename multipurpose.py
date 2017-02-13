@@ -1,6 +1,6 @@
 import logging
 import telegram
-from telegram.ext import Updater, CommandHandler, MessageHandler
+from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 import xkcd
 import sqlite3
 import configparser
