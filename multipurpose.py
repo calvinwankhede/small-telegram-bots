@@ -124,7 +124,7 @@ def main():
     dp.add_handler(CommandHandler("remove", removeitem, pass_args=True))
     dp.add_handler(CommandHandler("removeall", removeall, pass_args=True))
 
-    dp.add_handler(MessageHandler(Filters.text, new))
+    dp.add_handler(MessageHandler(Filters.text, log))
 
     # miscellaneous
     dp.add_error_handler(error)
