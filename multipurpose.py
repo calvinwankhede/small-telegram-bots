@@ -25,7 +25,6 @@ def randomxkcd(bot, update):
     randomcomic = xkcd.getRandomComic()
     getlink = randomcomic.getImageLink()
     comlink = str(getlink)
-    print(comlink)
     update.message.reply_photo(comlink, caption="%s.\nReply with /xkcd_explain for an explanation."% (randomcomic.getTitle()),quote=False)
     global xkcdexplanation
     xkcdexplanation = str(randomcomic.getExplanation())
@@ -98,6 +97,11 @@ def removeall(bot, update, args):
     conn.commit()
     conn.close()
 
+def new(bot, update):
+    file = open("log.txt", "w")
+    print update.message
+    income_message = update.message.text
+    file.write(income_message)
 
 def error(bot, update, error):
     logger.warn('Update "%s" caused error "%s"' % (update, error))
@@ -117,6 +121,8 @@ def main():
     dp.add_handler(CommandHandler("add", additem, pass_args=True))
     dp.add_handler(CommandHandler("remove", removeitem, pass_args=True))
     dp.add_handler(CommandHandler("removeall", removeall, pass_args=True))
+
+    dp.add_handler(MessageHandler(Filters.text, new))
 
     # miscellaneous
     dp.add_error_handler(error)
