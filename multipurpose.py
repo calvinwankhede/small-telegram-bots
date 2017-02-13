@@ -98,10 +98,10 @@ def removeall(bot, update, args):
     conn.close()
 
 def new(bot, update):
-    file = open("log.txt", "w")
+    file = open("log.txt", "a")
     print(update.message)
-    income_message = update.message.text
-    file.write(income_message)
+    income_message = update.message.text.replace("/n", " ")
+    file.write(update.message.first_name, income_message)
 
 def error(bot, update, error):
     logger.warn('Update "%s" caused error "%s"' % (update, error))
