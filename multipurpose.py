@@ -110,7 +110,7 @@ def getlog(bot, update, args):
     lineList = fileHandle.readlines()
     fileHandle.close()
     x = int(args[0])
-    update.message.reply_text(lineList[-x])
+    update.message.reply_text(lineList[-x], quote=False)
 
 def error(bot, update, error):
     logger.warn('Update "%s" caused error "%s"' % (update, error))
