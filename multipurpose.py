@@ -4,6 +4,7 @@ from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 import xkcd
 import sqlite3
 import configparser
+import re
 
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -97,11 +98,12 @@ def removeall(bot, update, args):
     conn.commit()
     conn.close()
 
-def new(bot, update):
+def log(bot, update):
     file = open("log.txt", "a")
-    print(update.message)
-    income_message = update.message.text.replace("/n", " ")
-    file.write(income_message)
+    sender = update.message.from_user.first_name
+    incoming_message = update.message.text.replace("/n", " ")
+    edited_mess = re.sub(r'\n', r' ', incoming_message)
+    file.write(sender + ": " + edited_mess + "\n")
 
 def error(bot, update, error):
     logger.warn('Update "%s" caused error "%s"' % (update, error))
