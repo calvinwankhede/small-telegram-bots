@@ -105,6 +105,13 @@ def log(bot, update):
     edited_mess = re.sub(r'\n', r' ', incoming_message)
     file.write(sender + ": " + edited_mess + "\n")
 
+def getlog(bot, update, args):
+    fileHandle = open ('log.txt',"r")
+    lineList = fileHandle.readlines()
+    fileHandle.close()
+    x = int(args[0])
+    update.message.reply_text(lineList[-x])
+
 def error(bot, update, error):
     logger.warn('Update "%s" caused error "%s"' % (update, error))
 
@@ -125,6 +132,7 @@ def main():
     dp.add_handler(CommandHandler("removeall", removeall, pass_args=True))
 
     dp.add_handler(MessageHandler(Filters.text, log))
+    dp.add_handler(CommandHandler("print", getlog, pass_args=True))
 
     # miscellaneous
     dp.add_error_handler(error)
