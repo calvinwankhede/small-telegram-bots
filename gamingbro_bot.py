@@ -33,7 +33,7 @@ def searchlist(bot, update):
     result = searchfile(skin)
     msg = ""
     if len(result) == 0:
-        update.message.reply_text("Your search returned zero results. Please try as few words as possible, for example 'Redline' or 'Asiimov'.", quote=False)
+        update.message.reply_text("Your search returned zero results. Please try as few words as possible, for example 'Redline' or 'Asiimov' or 'Hyper Beast'.", quote=False)
     else:
         for key, value in result.items():
             msg += "{}) {}\n".format(key, value)
@@ -45,7 +45,7 @@ def pricequery(bot, update):
     result = searchfile(skin)
     msg = ""
     if len(result) == 0:
-        update.message.reply_text("Your search returned zero results. Please try as few words as possible, for example 'Redline' or 'Asiimov'.", quote=False)
+        update.message.reply_text("Your search returned zero results. Please try as few words as possible, for example 'Redline' or 'Asiimov' or 'Hyper Beast'.", quote=False)
         return ConversationHandler.END
     else:
         for key, value in result.items():
