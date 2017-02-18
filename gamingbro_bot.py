@@ -14,7 +14,7 @@ GETPRICE = range(1)
 def start(bot, update):
     msg = "Hey {username}, I'm {botname}. You can: \n\n"
     msg += "1) Search for all Counter Strike skins. Send a message that starts with 'Search for', followed by your search query.  \n"
-    msg += "2) Obtain the median price of any skin. Send a message that starts with 'Price for', followed by your search query."
+    msg += "2) Obtain the median price of any skin. Send a message that starts with 'Price for', followed by your search query.\n"
     msg += "3) Get the inventory worth for any Steam user. Send a message that starts with 'Inventory', followed by the Steam community username."
     update.message.reply_text(msg.format(username=update.message.from_user.first_name, botname=bot.name), quote=False)
 
