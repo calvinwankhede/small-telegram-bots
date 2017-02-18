@@ -117,7 +117,7 @@ def error(bot, update, error):
 
 def main():
     # login to Telegram with the bot token
-    updater = Updater(config['configuration']['token'])
+    updater = Updater(config['configuration']['multipurpose_token'])
     dp = updater.dispatcher
 
     # handlers for all commands that this bot supports
