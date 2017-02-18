@@ -106,11 +106,12 @@ def log(bot, update):
     file.write(sender + ": " + edited_mess + "\n")
 
 def getlog(bot, update, args):
-    fileHandle = open ('log.txt',"r")
-    lineList = fileHandle.readlines()
-    fileHandle.close()
-    x = int(args[0])
-    update.message.reply_text(lineList[-x], quote=False)
+    if len(args) > 0:
+        fileHandle = open ('log.txt',"r")
+        lineList = fileHandle.readlines()
+        fileHandle.close()
+        x = int(args[0])
+        update.message.reply_text(lineList[-x], quote=False)
 
 def error(bot, update, error):
     logger.warn('Update "%s" caused error "%s"' % (update, error))
