@@ -20,10 +20,16 @@ def start(bot, update):
 
 def searchfile(query):
     i = 1
+    keywords = query.lower().split()
+    print(keywords)
     dictionary = collections.OrderedDict()
     with open("csgoitems.txt") as itemlist:
         for line in itemlist:
-            if query in line.lower():
+            all_present = True
+            for word in keywords:
+                if word not in line.lower():
+                    all_present = False
+            if all_present == True:
                 dictionary[str(i)] = line.rstrip()
                 i += 1
     return dictionary
