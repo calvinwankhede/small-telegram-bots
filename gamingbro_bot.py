@@ -4,10 +4,12 @@ import re
 import requests
 import collections
 import configparser
+import time
 
 config = configparser.ConfigParser()
 config.read('/etc/config.txt')
 result = {}
+exchange_rate = 0
 
 GETPRICE = range(1)
 
@@ -21,7 +23,6 @@ def start(bot, update):
 def searchfile(query):
     i = 1
     keywords = query.lower().split()
-    print(keywords)
     dictionary = collections.OrderedDict()
     with open("csgoitems.txt") as itemlist:
         for line in itemlist:
@@ -65,17 +66,27 @@ def pricequery(bot, update):
         update.message.reply_text(msg, quote=False)
     return GETPRICE
 
+def currencyconversion():
+    url = "http://api.fixer.io/latest?base=USD"
+    r = requests.get(url)
+    output = r.json()
+    if output["base"] == "USD":
+        global exchange_rate
+        exchange_rate = output["rates"]["INR"]
+
 def getprice(bot, update):
     number = update.message.text
-    global result
+    global result, exchange_rate
     query = result.get(number)
     if query != None:
         params = {'id': query}
         url = "http://csgobackpack.net/api/GetItemPrice"
         r = requests.get(url, params=params)
         output = r.json()
+        correct_price = float(output["median_price"]) * exchange_rate
+        rounded_price = '{0:,.2f}'.format(correct_price)
         if output["success"] is True:
-            update.message.reply_text("The median price for {} is ${}.".format(query, output["median_price"]), quote=False)
+            update.message.reply_text("The median price for {} is ₹{}.".format(query, rounded_price), quote=False)
         else:
             update.message.reply_text("An error occured, please check the name of the item or try again later.", quote=False)
         return ConversationHandler.END
@@ -98,7 +109,7 @@ def inventory(bot, update):
     else:
         update.message.reply_text("An error occured, please check the Steam ID and if the requested profile has a public inventory.", quote=False)
     
-
+currencyconversion()
 updater = Updater(config['configuration']['gamingbro_token'])
 dp = updater.dispatcher
 
