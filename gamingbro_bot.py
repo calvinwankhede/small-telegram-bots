@@ -20,6 +20,24 @@ def start(bot, update):
     msg += "3) Get the inventory worth for any Steam user. Send a message that starts with 'Inventory', followed by the Steam community username."
     update.message.reply_text(msg.format(username=update.message.from_user.first_name, botname=bot.name), quote=False)
 
+def currencyconversion():
+    url = "http://api.fixer.io/latest?base=USD"
+    r = requests.get(url)
+    global available_currencies, exchange_rate
+    try:
+        exchange_rate = r.json()
+        available_currencies = [key for key in exchange_rate["rates"].items()]
+    except:
+        return
+
+def currencyset(bot, update, args):
+    chatid = str(update.message.chat_id)
+    update.message.reply_text("Attempting to set your chat to {}".format(args[0]), quote=False)
+    with open("currencyprefs.txt", "r") as currencyprefs:
+        for line in currencyprefs:
+            if chatid in line:
+                update.message.reply_text("Stop updating the currency, you dumbfuck", quote=False)
+
 def searchfile(query):
     i = 1
     keywords = query.lower().split() 
@@ -40,9 +58,9 @@ def searchlist(bot, update):
     result = searchfile(skin)
     msg = ""
     if len(result) == 0:
-        update.message.reply_text("Your search returned zero results. Please try as few words as possible, for example 'Redline' or 'Asiimov' or 'Hyper Beast'.", quote=False)
+        update.message.reply_text("Your search returned zero results. Please try again.", quote=False)
     elif len(result) > 50:
-        update.message.reply_text("Your search returned >50 results. Please try keywords relating to the skin, for example 'Redline' or 'Asiimov' or 'Hyper Beast'.", quote=False)    
+        update.message.reply_text("Your search returned >50 results. Please try being more specific, for example 'AK redline' or 'AWP hyper beast'", quote=False)    
     else:
         for key, value in result.items():
             msg += "{}) {}\n".format(key, value)
@@ -54,8 +72,6 @@ def pricequery(bot, update):
     result = searchfile(skin)
     msg = ""
     customkeyboard = []
-    first_row = []
-    second_row = []
     if len(result) == 0:
         update.message.reply_text("Your search returned zero results. Please try as few words as possible, for example 'Redline' or 'Asiimov' or 'Hyper Beast'.", quote=False)
         return ConversationHandler.END
@@ -68,39 +84,13 @@ def pricequery(bot, update):
                 msg += "{}) {}\n".format(key, value)
         if len(result) > 10:
             msg += "\n_Your search was automatically truncated to the first 10 results only._"
-        for key in result:
-            if int(key) <= 10:
-                if int(key) <= 5:
-                    first_row.append(key)
-                if int(key) in range(6,11):
-                    second_row.append(key)
+        first_row = [key for key in result if int(key) in range(0, 6)]
+        second_row = [key for key in result if int(key) in range(6, 11)]
         customkeyboard.append(first_row)
         customkeyboard.append(second_row)
         reply_markup = telegram.ReplyKeyboardMarkup(customkeyboard, one_time_keyboard=True)
         update.message.reply_text(msg, quote=False, reply_markup=reply_markup, parse_mode="Markdown")
     return GETPRICE
-
-def currencyconversion():
-    url = "http://api.fixer.io/latest?base=USD"
-    r = requests.get(url)
-    output = r.json()
-    global available_currencies, exchange_rate
-    available_currencies = []
-    try:
-        exchange_rate = output
-        for key in output["rates"].items():
-            available_currencies.append(key)
-    except:
-        return
-
-def currencyset(bot, update, args):
-    chatid = str(update.message.chat_id)
-    update.message.reply_text("Attempting to set your chat to {}".format(args[0]), quote=False)
-    with open("currencyprefs.txt", "r") as currencyprefs:
-        for line in currencyprefs:
-            if chatid in line:
-                update.message.reply_text("Stop updating the currency, you dumbfuck", quote=False)
-
 
 def getprice(bot, update):
     requested_currency = "USD"
@@ -112,7 +102,7 @@ def getprice(bot, update):
     global result, exchange_rate
     number = update.message.text
     query = result.get(number)
-    reply_markup = telegram.ReplyKeyboardHide()
+    reply_markup = telegram.ReplyKeyboardRemove()
     if query != None:
         params = {'id': query}
         url = "http://csgobackpack.net/api/GetItemPrice"
@@ -126,7 +116,7 @@ def getprice(bot, update):
         if output["success"] is True:
             update.message.reply_text("The median price for {} is {}.".format(query, rounded_price), quote=False, reply_markup=reply_markup)
         else:
-            update.message.reply_text("An error occured, please check the name of the item or try again later.", quote=False, reply_markup=reply_markup)
+            update.message.reply_text("Our contact with Steam's market seems to be broken due to too many requests, please try again in an hour.", quote=False, reply_markup=reply_markup)
         return ConversationHandler.END
     else:
         update.message.reply_text("You specified an invalid number. Start over.", quote=False, reply_markup=reply_markup)
