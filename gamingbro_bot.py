@@ -151,11 +151,15 @@ def overwatch(bot, update, args):
         headers = {'User-Agent': 'GamingBro Bot for Telegram'}
         url = "https://owapi.net/api/v3/u/{}/stats".format(args[0])
         r = requests.get(url, headers=headers)
-        output = r.json()
-        player_competitive_stats = output["us"]["stats"]["competitive"]["overall_stats"]
-        msg = "Win rate: {}\n".format(player_competitive_stats["win_rate"])
-        msg += "Competitive Rank: {}\n".format(player_competitive_stats["comprank"])
-        update.message.reply_text(msg, quote=False)
+        try:
+            output = r.json()
+            player_competitive_stats = output["us"]["stats"]["competitive"]["overall_stats"]
+            msg = "Stats for args[0] are:\n"
+            msg += "Win rate: {}%\n".format(player_competitive_stats["win_rate"])
+            msg += "Competitive Rank: {}\n".format(player_competitive_stats["comprank"])
+            update.message.reply_text(msg, quote=False)
+        except:
+            update.message.reply_text("Sorry, invalid profile", quote=False)
     elif len(args) == 0:
         update.message.reply_text("Usage: /ow PlayerName", quote=False)
 
