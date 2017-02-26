@@ -146,6 +146,19 @@ def inventory(bot, update):
     else:
         update.message.reply_text("An error occured, please check the Steam ID and if the requested profile has a public inventory.", quote=False)
 
+def overwatch(bot, update, args):
+    if len(args) > 0:
+        headers = {'User-Agent': 'GamingBro Bot for Telegram'}
+        url = "https://owapi.net/api/v3/u/{}/stats".format(args[0])
+        r = requests.get(url, headers=headers)
+        output = r.json()
+        player_competitive_stats = output["us"]["stats"]["competitive"]["overall_stats"]
+        msg = "Win rate: {}\n".format(player_competitive_stats["win_rate"])
+        msg += "Competitive Rank: {}\n".format(player_competitive_stats["comprank"])
+        update.message.reply_text(msg, quote=False)
+    elif len(args) == 0:
+        update.message.reply_text("Usage: /ow PlayerName", quote=False)
+
 def main():
     currencyconversion()
     updater = Updater(config['configuration']['gamingbro_token'])
@@ -166,6 +179,7 @@ def main():
 
     dp.add_handler(RegexHandler("^[Ii]nventory\s.*", inventory))
     dp.add_handler(CommandHandler("currency", currencyset, pass_args=True))
+    dp.add_handler(CommandHandler("ow", overwatch, pass_args=True))
 
     updater.start_polling()
     updater.idle()
