@@ -154,7 +154,7 @@ def overwatch(bot, update, args):
         try:
             output = r.json()
             player_competitive_stats = output["us"]["stats"]["competitive"]["overall_stats"]
-            msg = "Stats for args[0] are:\n"
+            msg = "Stats for {} are:\n".format(args[0])
             msg += "Win rate: {}%\n".format(player_competitive_stats["win_rate"])
             msg += "Competitive Rank: {}\n".format(player_competitive_stats["comprank"])
             update.message.reply_text(msg, quote=False)
