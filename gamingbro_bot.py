@@ -154,11 +154,10 @@ def overwatch(bot, update, args):
         try:
             if args[1].lower() in ["eu", "us", "kr"]:
                 region = args[1].lower()
-                update.message.reply_text("Fetching stats for {} in the {} region.".format(args[0], region.upper()))
-                print(region)
+                update.message.reply_text("Fetching stats for {} in the {} region.".format(args[0], region.upper()), quote=False)
             else:
                 region = "us"
-                update.message.reply_text("Invalid region specified, defaulting to US.".format(args[0], region))
+                update.message.reply_text("Invalid region specified, defaulting to US.".format(args[0], region), quote=False)
                 update.message.reply_text("Correct usage: /ow PlayerName RegionName", quote=False)
             output = r.json()
             player_competitive_stats = output[region]["stats"]["competitive"]["overall_stats"]
