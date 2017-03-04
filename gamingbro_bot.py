@@ -173,7 +173,7 @@ def overwatch(bot, update, args):
 
 def main():
     currencyconversion()
-    updater = Updater(config['configuration']['play_token'])
+    updater = Updater(config['configuration']['gamingbro_token'])
     dp = updater.dispatcher
 
     dp.add_handler(CommandHandler("start", start))
